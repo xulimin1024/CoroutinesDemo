@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.coroutinesdemo.bean.ImageDataResponseBody2
 import com.example.coroutinesdemo.bean.LoadState
+import com.example.coroutinesdemo.bean.Result
 import com.example.coroutinesdemo.launch
 import com.example.coroutinesdemo.network.NetworkService
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -15,7 +17,8 @@ import kotlinx.coroutines.launch
 class MainViewModel() : ViewModel() {
     //存放三张图片的url数据
     val imageData = MutableLiveData<List<String>>()
-
+    //存放10张图片的url数据
+    val imageData2 = MutableLiveData<List<String>>()
     //存放网路加载状态信息
     val loadState = MutableLiveData<LoadState>()
 
@@ -58,7 +61,22 @@ class MainViewModel() : ViewModel() {
                 Log.d("xulimin","数据获取成功")
             }
         )
+    }
 
-
+    fun getData2(){
+        Log.d("xulimin","================")
+        launch(
+            {
+                val imageList = async { NetworkService.getImageData()}
+                val imageListData = imageList.await()
+                imageData2.value = imageListData.map { it.img }
+            },
+            {
+                loadState.value = LoadState.Fail(it.message ?: "加载失败")
+            },
+            {
+                Log.d("xulimin","数据获取成功")
+            }
+        )
     }
 }

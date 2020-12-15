@@ -1,5 +1,11 @@
 package com.example.coroutinesdemo.bean
 
+//定义一个数据包装类
+data class ResponseBody<T>(
+    val code: Int,
+    val msg: String,
+    val result: T
+)
 //定义的数据类
 data class ImageDataResponseBody2(
     val code: Int,

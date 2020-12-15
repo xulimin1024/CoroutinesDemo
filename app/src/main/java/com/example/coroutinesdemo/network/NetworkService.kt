@@ -1,5 +1,8 @@
 package com.example.coroutinesdemo.network
 
+import com.example.coroutinesdemo.bean.ImageDataResponseBody2
+import com.example.coroutinesdemo.bean.ResponseBody
+import com.example.coroutinesdemo.bean.Result
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,4 +19,16 @@ object NetworkService {
 
     //网络层访问服务
     val apiService = retrofit.create<ApiService>()
+
+    //数据脱壳与错误预处理
+    fun <T> preprocessData(responseBody: ResponseBody<T>): T {
+        return if (responseBody.code == 200) responseBody.result else throw Throwable(responseBody.msg)
+    }
+    //直接把该方法暴露给viemodel
+    suspend fun getImageData(): List<Result> {
+        //调用ApiService定义的接口方法
+        val responseBody = apiService.getImages2()
+        //返回处理后的数据
+        return preprocessData<List<Result>>(responseBody)
+    }
 }

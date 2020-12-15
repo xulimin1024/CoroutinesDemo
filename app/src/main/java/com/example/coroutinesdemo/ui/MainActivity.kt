@@ -45,11 +45,20 @@ class MainActivity : AppCompatActivity() {
             Glide.with(this).load(it[1]).into(imageView2)
             Glide.with(this).load(it[2]).into(imageView3)
         })
+        viewModel.imageData2.observe(this, Observer {
+            for (str:String in it){
+                Log.d("xulimin",str)
+            }
+        })
+
+
         //点击刷新按钮来网络加载
         button.setOnClickListener {
             viewModel.getData()
         }
-
+        getMore.setOnClickListener {
+            viewModel.getData2()
+        }
     }
 
 }
